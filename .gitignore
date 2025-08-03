@@ -1,0 +1,9 @@
+node_modules/
+
+# Ignore dist in general
+dist/
+
+# Except when pushing to gh-pages
+!dist/.gitkeep
+!dist/index.html
+!dist/assets/*
