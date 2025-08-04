@@ -12,7 +12,7 @@ module.exports = {
   output: {
     filename: "main.js",
     path: path.resolve(__dirname, "dist"),
-    publicPath: isProduction ? "/Weather-app/" : "/", // ✅ dynamic publicPath
+    publicPath: isProduction ? "/Weather-app/" : "/", // ✅ Required fix for GitHub Pages
     clean: true,
     assetModuleFilename: "images/[hash][ext][query]",
   },
@@ -24,7 +24,6 @@ module.exports = {
     hot: true,
     port: 3000,
     historyApiFallback: true,
-    // ✅ No static.directory needed — HtmlWebpackPlugin handles in-memory HTML
   },
 
   module: {
@@ -54,12 +53,12 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: "./template.html",
       filename: "index.html",
-     
     }),
     new MiniCssExtractPlugin({
       filename: "[contenthash].css",
     }),
   ],
 };
+
 
 
