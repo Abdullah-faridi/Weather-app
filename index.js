@@ -1,3 +1,4 @@
+import "./styles.css";
 
 
 const apiKey = "9684a6d8834c6f067df1da442108e8f9";

@@ -1,41 +1,40 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
+const isProduction = process.env.NODE_ENV === "production";
 
 module.exports = {
-  mode: "production",
+  mode: isProduction ? "production" : "development",
+
   entry: "./index.js",
+
   output: {
     filename: "main.js",
     path: path.resolve(__dirname, "dist"),
-    publicPath: "/Weather-app/",
+    publicPath: isProduction ? "/Weather-app/" : "/", // ✅ dynamic publicPath
     clean: true,
     assetModuleFilename: "images/[hash][ext][query]",
   },
-  devtool: "eval-source-map",
-  devServer: {
-    static: {
-      directory: path.join(__dirname, "dist"),
-      publicPath: "/", // Different for dev server
-    },
 
-    watchFiles: ["./template.html", "./index.js"], 
+  devtool: isProduction ? false : "eval-source-map",
+
+  devServer: {
     open: true,
     hot: true,
     port: 3000,
     historyApiFallback: true,
-
+    // ✅ No static.directory needed — HtmlWebpackPlugin handles in-memory HTML
   },
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: "./template.html", 
-      filename: "index.html",
-    }),
-  ],
+
   module: {
     rules: [
       {
         test: /\.css$/i,
-        use: ["style-loader", "css-loader"],
+        use: [
+          isProduction ? MiniCssExtractPlugin.loader : "style-loader",
+          "css-loader",
+        ],
       },
       {
         test: /\.html$/i,
@@ -45,9 +44,22 @@ module.exports = {
         test: /\.(png|svg|jpg|jpeg|gif)$/i,
         type: "asset/resource",
         generator: {
-          filename: "assets/[name][ext][query]", // Consistent naming
+          filename: "assets/[name][ext][query]",
         },
       },
     ],
   },
+
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: "./template.html",
+      filename: "index.html",
+     
+    }),
+    new MiniCssExtractPlugin({
+      filename: "[contenthash].css",
+    }),
+  ],
 };
+
+
